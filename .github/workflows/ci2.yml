@@ -1,0 +1,45 @@
+name: CI Pipeline
+
+# When actions will run: when a push or pull request to the branch 'master'
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Fetch project from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js version
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # If necessary change to the desired version of Node.js
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Run ESLint
+      - name: Run ESLint
+        run: npm run lint
+
+      # 5. Run Prettier
+      - name: Run Prettier
+        run: npm run format
+
+      # 6. Run tests
+      - name: Run tests
+        run: npm run test -- --watchAll=false
+
+      # 7. Run the build script
+      - name: Build the app
+        run: npm run build
